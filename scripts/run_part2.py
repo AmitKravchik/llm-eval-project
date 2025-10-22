@@ -69,7 +69,7 @@ def main(args):
 
     chain = prompt_template | llm | output_parser
 
-
+    print(f"Processing {len(samples)} samples")
     for i in range(0, len(samples), RATE_LIMIT):
         batch = samples[i:i+RATE_LIMIT]
         batch_results = chain.batch(batch, return_exceptions=True)
@@ -77,14 +77,15 @@ def main(args):
             results = batch_results
         else:
             results.extend(batch_results)
-        time.sleep(60)
+        time.sleep(60) # to respect rate limit
     original_sucess_rate = get_success_rate(samples=samples, llm_results=results)
 
+    print("Starting review process...")
     validated_results = []
     request_count = 0
     for sample, llm_result in zip(samples, results):
         if request_count == RATE_LIMIT:
-            time.sleep(60)
+            time.sleep(60) # to respect rate limit
             request_count = 0
         validated_result, request_count = validate_answer_with_llm(
             sample=sample,

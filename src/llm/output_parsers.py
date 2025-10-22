@@ -25,7 +25,7 @@ class AnsewerOutputParser(BaseOutputParser):
         end_index = text.find(self.tags[part][1])
 
         if start_index == -1 or end_index == -1:
-            return "invalid"
+            return "invalid" # Indicate invalid if tags not found
 
         extracted = text[start_index + len(self.tags[part][0]):end_index].strip()
         return extracted

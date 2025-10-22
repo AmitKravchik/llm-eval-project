@@ -27,6 +27,7 @@ def main(args):
 
     chain = prompt_template | llm | output_parser
 
+    print(f"Processing {len(samples)} samples")
     for i in range(0, len(samples), RATE_LIMIT):
         batch = samples[i:i+RATE_LIMIT]
         batch_results = chain.batch(batch, return_exceptions=True)
@@ -34,7 +35,7 @@ def main(args):
             results = batch_results
         else:
             results.extend(batch_results)
-        time.sleep(60)
+        time.sleep(60) # to respect rate limit
     sucess_rate = get_success_rate(samples=samples, llm_results=results)
 
     return sucess_rate
