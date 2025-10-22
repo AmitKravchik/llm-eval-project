@@ -1,16 +1,20 @@
 import urllib.request
 import json
-from config.config import DATASET_URL, LABELS_URL
+from src.config.settings import DATASET_URL, LABELS_URL
+from src.data.base_qa_dataset import BaseQADataset
 
-class PIQADataset:
+class PIQADataset(BaseQADataset):
 
-    def __init__(self):
-        self.data = self.load_data()
+    def __init__(self, data=None):
         self.dataset_url = DATASET_URL
         self.labels_url = LABELS_URL
+        if data is None:
+            self.data = self.load_data()
+        else:
+            self.data = data
 
 
-    def load_data(self):
+    def load_data(self) -> list:
         with urllib.request.urlopen(self.dataset_url) as f:
             data = [json.loads(line.decode("utf-8")) for line in f]
 
@@ -21,10 +25,3 @@ class PIQADataset:
             d['label'] = int(l)
         
         return data
-
-
-    def get_example(self, index):
-        if index < 0 or index >= len(self.data):
-            raise IndexError("Index out of range")
-        return self.data[index]
-
