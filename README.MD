@@ -1,5 +1,3 @@
-# Irregular Home Assignment
-
 ## Project Overview
 
 ### **Part 1 — Can Gemini Answer Simple Questions?**
